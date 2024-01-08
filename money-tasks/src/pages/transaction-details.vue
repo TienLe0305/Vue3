@@ -1,13 +1,11 @@
 <template>
   <div>
-    <h1>Transaction Details is here</h1>
     <div v-if="transaction">
-      <h1>{{ transaction.name }}</h1>
+      <h1>ID: {{ $route.params.id }}</h1>
+      <h3>Name: {{ transaction.name }}</h3>
       <p>Price: {{ transaction.price }}</p>
     </div>
-    <div v-else>
-      <p>Transaction not found</p>
-    </div>
+    <div v-else>Loading transaction {{ $route.params.id }} ...</div>
   </div>
 </template>
 
@@ -15,29 +13,14 @@
 export default {
   data() {
     return {
-      transactions: [
-        {
-          id: 1,
-          name: "Đi siêu thị",
-          price: 1000000,
-        },
-        {
-          id: 2,
-          name: "Thanh toán tiền trọ",
-          price: 2000000,
-        },
-        {
-          id: 3,
-          name: "Thanh toán tiền Momo",
-          price: 3000000,
-        },
-      ],
       transaction: null,
     };
   },
-  mounted() {
-    const transactionId = parseInt(this.$route.params.id);
-    this.transaction = this.transactions.find((t) => t.id === transactionId);
+  created() {
+    fetch("http://localhost:3000/transactions/" + this.$route.params.id)
+      .then((response) => response.json())
+      .then((data) => (this.transaction = data))
+      .then(() => console.log(this.transaction));
   },
 };
 </script>
