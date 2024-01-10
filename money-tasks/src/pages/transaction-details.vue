@@ -10,17 +10,20 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+useRoute;
 export default {
-  data() {
+  setup() {
+    const route = useRoute();
+    const store = useStore();
+
+    store.dispatch("fetchTransaction", { id: route.params.id });
+
     return {
-      transaction: null,
+      transaction: computed(() => store.state.transaction),
     };
-  },
-  created() {
-    fetch("http://localhost:3000/transactions/" + this.$route.params.id)
-      .then((response) => response.json())
-      .then((data) => (this.transaction = data))
-      .then(() => console.log(this.transaction));
   },
 };
 </script>
